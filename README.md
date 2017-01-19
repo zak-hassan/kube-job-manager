@@ -13,3 +13,21 @@ Kubernetes features job objects used to create pods that contain containers whic
 
 What if there was a tool that lets you manage your jobs all in a centralized UI which lets you retrigger your jobs if failure occurs. If a job continously fails then alerts should be logged and metrics should display job failures.
 
+
+
+## Building
+
+```bash
+
+make build
+
+```
+
+## Updating Go Dependencies
+
+```bash
+
+go get <....>
+godep save ./...
+
+```
