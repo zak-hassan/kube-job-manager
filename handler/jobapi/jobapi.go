@@ -2,7 +2,6 @@ package jobapi
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -25,7 +24,6 @@ func GetAllJobs(w http.ResponseWriter, r *http.Request) {
 		Jobmetadata{Name: "j1", Desc: "Description...1", Content: "Content...1"},
 		Jobmetadata{Name: "j2", Desc: "Description...2", Content: "Content...2"},
 	}
-	fmt.Println("Endpoint Hit: returnAllJobs")
 	json.NewEncoder(w).Encode(jlist)
 }
 
@@ -33,5 +31,7 @@ func GetAllJobs(w http.ResponseWriter, r *http.Request) {
 func GetJob(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["id"]
-	fmt.Fprintf(w, "id: "+key)
+	result := GetJobByName(key)
+	json.NewEncoder(w).Encode(result)
+
 }

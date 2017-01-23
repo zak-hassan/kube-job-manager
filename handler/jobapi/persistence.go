@@ -1,4 +1,4 @@
-package mongodb
+package jobapi
 
 import (
 	"fmt"
@@ -7,12 +7,10 @@ import (
 
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-
-	"github.com/zmhassan/kube-job-manager/handler/jobapi"
 )
 
 // SaveJobs - Persistant class that will persist job metadata
-func SaveJobs(job jobapi.Jobmetadata) boolean {
+func SaveJobs(job Jobmetadata) {
 	session, err := mgo.Dial(os.Getenv("MONGODB_URL"))
 	if err != nil {
 		panic(err)
@@ -21,11 +19,10 @@ func SaveJobs(job jobapi.Jobmetadata) boolean {
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB("jobmanager").C("jobs")
 	c.Insert(&job)
-	return true
 }
 
 // Get job by id
-func GetJobByName(name string) {
+func GetJobByName(name string) Jobmetadata {
 	session, err := mgo.Dial(os.Getenv("MONGODB_URL"))
 	if err != nil {
 		panic(err)
@@ -33,11 +30,13 @@ func GetJobByName(name string) {
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
 	c := session.DB("jobmanager").C("jobs")
-	result := jobapi.Jobmetadata{}
-	err = c.Find(bson.M{"name": "accounting-mllib"}).One(&result)
+	result := Jobmetadata{}
+	err = c.Find(bson.M{"name": name}).One(&result)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	fmt.Println("Description: ", result.Desc)
+	return result
+
 }
